@@ -68,7 +68,6 @@ class App extends Component {
   }
 
   onResultsChange (newResults) {
-    console.log('Results changed')
     this.setState({
       searchResults: newResults
     })
@@ -124,12 +123,22 @@ class Header extends Component {
     return (
       <header>
         <img src={logo} />
-        <div className='search-icon' onClick={this.props.openSearch}><span className='fa fa-search' /></div>
-        { this.props.showSearch && <div className='search-bar'><input type='text' placeholder='Search' onKeyUp={e => this.search(e)} />
-          <div className='clear-search' onClick={this.props.clearSearch}><span className='fa fa-times' /></div></div> }
+        <div className='search-icon' onClick={this.props.openSearch}><span className='fa fa-search' /> Click to search</div>
+        { this.props.showSearch && 
+          <div className='search-bar'>
+            <input id="search" type='text' placeholder='Search' onKeyUp={e => this.search(e)} ref={(input) => { this.searchInput = input; }} />
+            <div className='clear-search' onClick={this.props.clearSearch}><span className='fa fa-times' /></div>
+          </div> 
+        }
       </header>
     )
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.showSearch && !prevState.showSearch) {
+      this.searchInput.focus()
+    }
+ }
 }
 
 class Body extends Component {

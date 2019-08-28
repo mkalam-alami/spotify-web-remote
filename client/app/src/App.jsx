@@ -137,7 +137,7 @@ class Header extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.showSearch && !prevState.showSearch) {
+    if (prevProps.showSearch && !prevState.showSearch && this.searchInput) {
       this.searchInput.focus()
     }
  }

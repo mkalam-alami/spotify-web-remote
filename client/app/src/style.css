@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body,html {
     margin: 0;
     padding: 0;
@@ -6,45 +10,50 @@ body,html {
 }
 
 header {
-    height: 50px;
-    border-bottom: 1px solid #84bd00;
+    height: 60px;
+    border-bottom: 1px solid #aaa;
 }
 
 header img {
     width: 40px;
     height: 40px;
-    margin-top: 5px;
-    margin-left: 5px;
+    margin: 10px;
 }
 
 div.controls {
     position: absolute;
     bottom: 0;
-    height: 150px;
+    height: 180px;
     width: 100%;
-    border-top: 1px solid gray;
+    border-top: 1px solid #555555;
     text-align: center;
-    padding-top: 5px;
+    padding: 10px;
+    background-color: #282828;
 }
 
-.btn-controls {
+.btn-control {
     width: 70px;
     height: 70px;
     border-radius: 35px;
-    border: 1px solid #84bd00;
-    background-color: #222;
-    margin: 3px;
-    color: gray;
+    border: 1px solid #fff;
+    margin: 5px;
+    color: #fff;
+    background-color: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
-
-.artist {
-    color: gray;
-    font-weight: bold;
+.btn-control:hover {
+    background-color: rgba(255,255,255,0.1);
 }
 
 .song {
-    color: gray;
-    font-style: italic;
+    font-weight: bold;
+    color: #fff;
+    padding-bottom: 5px;
+}
+
+.artist {
+    color: #aaa;
 }
 
 .progress {
@@ -55,10 +64,15 @@ div.controls {
 
 div.search-icon {
     position: absolute;
-    left: 55px;
-    top: 10px;
+    left: 70px;
+    top: 15px;
+    right: 15px;
     font-size: 1.8em;
-    color: gray;
+    color: #aaa;
+    cursor: pointer;
+}
+div.search-icon:hover {
+    background-color: #282828;
 }
 
 div.search-bar {
@@ -69,21 +83,21 @@ div.search-bar {
 }
 
 div.search-bar input {
-    height: 34px;
+    height: 48px;
     font-size: 1.5em;
     width: 100%;
-    background-color: #111;
+    background-color: #333;
     border: none;
-    border-bottom: 1px solid gray;
-    color: gray;
+    color:#aaa;
     font-style: italic;
 }
 
 div.search-results {
     width: 100%;
     background-color: #333;
+    border: 1px solid #111;
     position: absolute;
-    top: 51px;
+    top: 55px;
     bottom: 136px;
     overflow-y: scroll;
     z-index: 1;
@@ -93,10 +107,10 @@ div.search-result {
     height: 40px;
     line-height: 40px;
     font-size: 1.5em;
-    border-bottom: 1px solid gray;
-    color: lightgray;
+    border-top: 1px solid #111;
+    color: #aaa;
     padding-left: 5px;
-    width: 95%;
+    width: 100%;
     overflow: hidden;
 }
 
@@ -109,9 +123,10 @@ span.result-artist {
 div.clear-search {
     position: absolute;
     top: 4px;
-    right: 0;
-    font-size: 1.8em;
-    color: gray;
+    right: 10px;
+    font-size: 2.0rem;
+    color: #AAA;
+    cursor: pointer;
 }
 
 .artwork {
@@ -142,5 +157,5 @@ div.clear-search {
 }
 .progress-bar-fill {
     height: 15px;
-    background-color: #84bd00;
+    background-color: #1ed760;
 }

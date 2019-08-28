@@ -132,7 +132,7 @@ div.clear-search {
 .artwork {
     position: absolute;
     top: 50px;
-    bottom: 160px;
+    bottom: 170px;
     left: 0px;
     right: 0px;
     padding: 10px;
@@ -144,7 +144,6 @@ div.clear-search {
     max-height: 100%;
     margin: auto;
     overflow: auto;
-    zoom: 10;
 }
 
 .progress-bar {

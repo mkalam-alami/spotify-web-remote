@@ -56,7 +56,9 @@ class App extends Component {
           artist: result.body.item.artists[0].name,
           song: result.body.item.name,
           playing: result.body.is_playing,
-          artworkUrl: result.body.item.album.images[0].url
+          artworkUrl: result.body.item.album.images[0].url,
+          progressMs: result.body.progress_ms,
+          durationMs: result.body.item.duration_ms
         })
       })
   }
@@ -86,7 +88,7 @@ class App extends Component {
         <Favicon url={logohuis} />
         <Header onResultsChange={this.onResultsChange} showSearch={this.state.showSearch} openSearch={this.openSearch} clearSearch={this.clearSearch} />
         <Body artworkUrl={this.state.artworkUrl} searchResults={this.state.searchResults} clearSearch={this.clearSearch} />
-        <Controls artist={this.state.artist} song={this.state.song} playing={this.state.playing} />
+        <Controls artist={this.state.artist} song={this.state.song} playing={this.state.playing} progressMs={this.state.progressMs} durationMs={this.state.durationMs} />
       </div>
     )
   }
@@ -194,6 +196,25 @@ class Song extends Component {
   }
 }
 
+class Progress extends Component {
+  formatTime(ms) {
+    const m = Math.floor(ms / 60000)
+    const s = Math.floor((ms % 60000) / 1000)
+    return m + ':' + (s<10?'0':'') + s
+  }
+
+  render () {
+    return (
+      <div>
+      {
+        this.props.progressMs && 
+        <span className='progress'>{this.formatTime(this.props.progressMs)} / {this.formatTime(this.props.durationMs)}</span>
+      }
+      </div>
+    )
+  }
+}
+
 class Controls extends Component {
   constructor (props) {
     super(props)
@@ -228,6 +249,7 @@ class Controls extends Component {
       <div className='controls'>
         <Artist artist={this.props.artist} /><br />
         <Song song={this.props.song} /><br />
+        <Progress progressMs={this.props.progressMs} durationMs={this.props.durationMs} />
         <button className='btn-controls' onClick={this.prev}><span className='fa fa-step-backward' /></button>
         <button className='btn-controls' onClick={this.pause}><span className={'fa fa-' + (this.props.playing ? 'pause' : 'play')} /></button>
         <button className='btn-controls' onClick={this.next}><span className='fa fa-step-forward' /></button>

@@ -47,6 +47,12 @@ div.controls {
     font-style: italic;
 }
 
+.progress {
+    margin: 5px;
+    color: gray;
+    font-size: 1.7rem;
+}
+
 div.search-icon {
     position: absolute;
     left: 55px;

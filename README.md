@@ -1,5 +1,5 @@
 # Spotify Web Remote
-This is a web based remote/commander for Spotify. It works with the Spotify Web API and can be used to control your Spotify account from any client. You can use this to give easy and limited control of what's currently playing to other people.
+This is a web based remote/commander for Spotify, and can be used to control your Spotify account from any browser. Since the client doesn't have to be logged in, you can use it to share control of the player with other people.
 
 ![](/example.png)
 

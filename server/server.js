@@ -111,7 +111,8 @@ app.get('/api/control/:control', function (req, res, next) {
 
 app.get('/api/play/:track', function (req, res, next) {
     assertSpotifyAuthenticated(res);
-    spotifyApi.play({ uris: [req.params.track] })
+    const currentState = await spotifyApi.getMyCurrentPlaybackState();
+    spotifyApi.play({ uris: [req.params.track], context_uri: currentState.body.context.uri })
         .then(function () {
             res.send({ status: 'ok' })
         }, function (err) {

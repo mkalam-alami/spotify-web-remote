@@ -1,15 +1,7 @@
 # Spotify Web Remote
-This is a web based remote/commander for spotify. It works with the Spotify web api and can be used to control your spotify account. First you'll have to set up the API keys.
+This is a web based remote/commander for Spotify. It works with the Spotify Web API and can be used to control your Spotify account from any client. You can use this to give easy and limited control of what's currently playing to other people.
 
-# ToDo
-- ~Add search~
-- Add authentication
-- Update deploy script for ReactJS
-- Add way to set up authorization with spotify api (getting token etc)
-- Add volume control
-- Add shuffle/repeat buttons
-
-![Screenshot](/example.png?raw=true "Screen shot")
+![](/example.png)
 
 ## Setting up the authorization
 

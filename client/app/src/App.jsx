@@ -113,7 +113,12 @@ class Header extends Component {
         let searchResults = []
         /* tracks */
         _.forEach(result.body.tracks.items, (track) => {
-          searchResults.push({name: track.name, uri: track.uri, artist: track.artists.map(x => x.name).join(', ')})
+          searchResults.push({
+            name: track.name,
+            uri: track.uri,
+            artist: track.artists.map(x => x.name).join(', '),
+            popularity: track.popularity
+          })
         })
         if (this.searchCounter === currentSearchCounter) {
           this.props.onResultsChange(searchResults)
@@ -175,7 +180,13 @@ class SearchResult extends Component {
 
   render () {
     return (
-      <div className='search-result' onClick={this.playSong}>{this.props.result.name} <span className='result-artist'>{this.props.result.artist}</span></div>
+      <div className='search-result' onClick={this.playSong}>
+        <div class="progress-bar">
+          <div class="progress-bar-fill" style={{width: this.props.result.popularity + '%'}}></div>
+        </div>
+        {this.props.result.name} 
+        <span className='result-artist'>{this.props.result.artist}</span>
+      </div>
     )
   }
 }

@@ -86,6 +86,7 @@ div.search-results {
     top: 51px;
     bottom: 136px;
     overflow-y: scroll;
+    z-index: 1;
 }
 
 div.search-result {
@@ -100,6 +101,7 @@ div.search-result {
 }
 
 span.result-artist {
+    padding-left: 5px;
     font-style: italic;
     font-size: 0.5em;
 }
@@ -128,4 +130,17 @@ div.clear-search {
     margin: auto;
     overflow: auto;
     zoom: 10;
+}
+
+.progress-bar {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 0;
+    width: 30px;
+    height: 15px;
+    background-color: black;
+}
+.progress-bar-fill {
+    height: 15px;
+    background-color: #84bd00;
 }

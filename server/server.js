@@ -5,6 +5,8 @@ const dotenv = require('dotenv');
 const envfile = require('envfile');
 const SpotifyWebApi = require('spotify-web-api-node');
 
+const queue = require('./queue');
+
 dotenv.config({ path: 'config.env' });
 
 /* Initalize the Spotify API */
@@ -42,16 +44,16 @@ function saveEnv() {
  */
 function refresh(callback) {
     spotifyApi.refreshAccessToken()
-    .then(function (data) {
-        console.log('The access token has been refreshed');
-        
-        // Save the access token so that it's used in future calls
-        spotifyApi.setAccessToken(data.body['access_token']);
-        callback.call();
-    }, function (err) {
-        console.log('Could not refresh access token', err);
-        spotifyApi.setRefreshToken('');
-    });
+        .then(function (data) {
+            console.log('The access token has been refreshed');
+
+            // Save the access token so that it's used in future calls
+            spotifyApi.setAccessToken(data.body['access_token']);
+            callback.call();
+        }, function (err) {
+            console.log('Could not refresh access token', err);
+            spotifyApi.setRefreshToken('');
+        });
 }
 
 const app = express();
@@ -59,18 +61,26 @@ const app = express();
 /**
  * Get the current playing song information
  */
-app.get('/api/currentSong', function (req, res, next) {
+app.get('/api/currentSong', async function (req, res, next) {
     assertSpotifyAuthenticated(res);
-    spotifyApi.getMyCurrentPlayingTrack()
-    .then(function (data) {
-        res.send(data);
-        // res.send(200);
-    }, function (err) {
+    try {
+        const currentState = await spotifyApi.getMyCurrentPlayingTrack()
+
+        if (!currentState.body.is_playing) {
+            const nextUri = queue.nextUri();
+            if (nextUri) {
+                await spotifyApi.play({ uris: [nextUri] });
+            }
+        }
+
+        currentState.body.queue = queue.tracks;
+        res.send(currentState);
+    } catch (err) {
         console.log(err);
         refresh(function () {
             res.redirect('/api/currentSong');
         });
-    });
+    }
 });
 
 /**
@@ -123,7 +133,7 @@ app.get('/api/play/:track', async function (req, res, next) {
 
 app.get('/api/search/:q', function (req, res, next) {
     assertSpotifyAuthenticated(res);
-    spotifyApi.search(req.params.q, ['album', 'artist', 'playlist', 'track'])
+    spotifyApi.search(req.params.q, ['artist', 'track'])
         .then(function (result) {
             res.send(result)
         }, function (err) {
@@ -150,9 +160,36 @@ app.get('/', async (req, res, next) => {
         }
     } else {
         console.log('Redirecting to Spotify for authorization')
-        res.redirect(spotifyApi.createAuthorizeURL(['app-remote-control','user-read-playback-state','user-modify-playback-state','user-read-currently-playing']));
+        res.redirect(spotifyApi.createAuthorizeURL(['app-remote-control', 'user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing']));
     }
 });
+
+app.post('/api/queue/:uri', async function (req, res, next) {
+    try {
+        assertSpotifyAuthenticated(res);
+        const trackInfo = await spotifyApi.getTrack(req.query.uri);
+        if (trackInfo) {
+            queue.append(trackInfo.body.uri, trackInfo.body.name, trackInfo.body.artists.join(', '));
+        }
+        res.end()
+    } catch (err) {
+        console.log(err)
+        res.sendStatus(500)
+    }
+});
+app.delete('/api/queue/:uri', async function (req, res, next) {
+    queue.delete(req.query.uri)
+    res.end()
+});
+app.post('/api/queue/move-down/:uri', async function (req, res, next) {
+    queue.moveDown(req.query.uri)
+    res.end()
+});
+app.post('/api/queue/move-up/:uri', async function (req, res, next) {
+    queue.moveUp(req.query.uri)
+    res.end()
+});
+
 
 /* The front end */
 app.use(express.static(path.join(__dirname, '../client/app/dist/')));

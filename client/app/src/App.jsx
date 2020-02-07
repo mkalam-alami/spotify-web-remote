@@ -260,8 +260,7 @@ class SearchResult extends Component {
   }
 
  /* playSong() {
-    //api.get('play/' + this.props.result.uri)
-    console.log("TODO play");
+    api.get('play/' + this.props.result.uri)
     this.props.clearSearch()
   }*/
 

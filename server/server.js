@@ -65,8 +65,7 @@ app.get('/api/currentSong', async function (req, res, next) {
     assertSpotifyAuthenticated(res);
     try {
         const currentState = await spotifyApi.getMyCurrentPlayingTrack()
-
-        if (!currentState.body.is_playing) {
+        if (currentState.body.progress_ms === 0 && !currentState.body.is_playing) {
             const nextUri = queue.nextUri();
             if (nextUri) {
                 await spotifyApi.play({ uris: [nextUri] });
@@ -154,8 +153,8 @@ app.get('/', async (req, res, next) => {
             console.log('Tokens received')
             saveEnv();
             res.redirect('/');
-        } catch (e) {
-            console.error(e);
+        } catch (err) {
+            console.error(err);
             res.redirect('/');
         }
     } else {
@@ -166,7 +165,6 @@ app.get('/', async (req, res, next) => {
 
 app.post('/api/queue/:uri', async function (req, res, next) {
     try {
-        console.log(`Adding track ${req.params.uri} to queue`);
         const trackId = req.params.uri.replace('spotify:track:', '');
         assertSpotifyAuthenticated(res);
         const trackInfo = await spotifyApi.getTrack(trackId);

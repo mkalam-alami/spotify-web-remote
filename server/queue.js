@@ -20,6 +20,7 @@ class Queue {
 
     nextUri() {
         if (this.tracks.length > 0) {
+            console.log("Next up: " + this.tracks[0].name);
             return this.tracks.splice(0, 1)[0].uri;
         } else {
             return false;

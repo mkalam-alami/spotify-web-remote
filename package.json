@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node .",
     "build": "cd client/app && npm run build",
-    "build-watch": "cd client/app && npm run build -- -w"
+    "build:watch": "cd client/app && npm run build -- -w"
   },
   "repository": {
     "type": "git",

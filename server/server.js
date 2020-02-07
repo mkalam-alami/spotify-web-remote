@@ -166,28 +166,36 @@ app.get('/', async (req, res, next) => {
 
 app.post('/api/queue/:uri', async function (req, res, next) {
     try {
+        console.log(`Adding track ${req.params.uri} to queue`);
+        const trackId = req.params.uri.replace('spotify:track:', '');
         assertSpotifyAuthenticated(res);
-        const trackInfo = await spotifyApi.getTrack(req.query.uri);
+        const trackInfo = await spotifyApi.getTrack(trackId);
         if (trackInfo) {
-            queue.append(trackInfo.body.uri, trackInfo.body.name, trackInfo.body.artists.join(', '));
+            const artist = trackInfo.body.artists.map(artistInfo => artistInfo.name).join(', ');
+            console.log(`Adding track ${artist} - ${trackInfo.body.name} to queue`);
+            queue.append(trackInfo.body.uri, trackInfo.body.name, artist);
         }
-        res.end()
+        res.send({});
+        res.end();
     } catch (err) {
         console.log(err)
         res.sendStatus(500)
     }
 });
 app.delete('/api/queue/:uri', async function (req, res, next) {
-    queue.delete(req.query.uri)
-    res.end()
+    queue.delete(req.params.uri)
+    res.send({});
+    res.end();
 });
 app.post('/api/queue/move-down/:uri', async function (req, res, next) {
-    queue.moveDown(req.query.uri)
-    res.end()
+    queue.moveDown(req.params.uri)
+    res.send({});
+    res.end();
 });
 app.post('/api/queue/move-up/:uri', async function (req, res, next) {
-    queue.moveUp(req.query.uri)
-    res.end()
+    queue.moveUp(req.params.uri)
+    res.send({});
+    res.end();
 });
 
 

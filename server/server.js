@@ -56,6 +56,13 @@ function refresh(callback) {
         });
 }
 
+function playNextInQueue() {
+    const nextUri = queue.nextUri();
+    if (nextUri) {
+        await spotifyApi.play({ uris: [nextUri] });
+    }
+}
+
 const app = express();
 
 /**
@@ -68,10 +75,7 @@ app.get('/api/currentSong', async function (req, res, next) {
         if (!currentState.body.progress_ms
             && !currentState.body.is_playing
             && currentState.body.item.uri === app.locals.currentPlayingUri) {
-            const nextUri = queue.nextUri();
-            if (nextUri) {
-                await spotifyApi.play({ uris: [nextUri] });
-            }
+            playNextInQueue();
         } else if (currentState.body.is_playing) {
             app.locals.currentPlayingUri = currentState.body.item.uri;
         }
@@ -91,21 +95,26 @@ app.get('/api/currentSong', async function (req, res, next) {
  */
 app.get('/api/control/:control', function (req, res, next) {
     assertSpotifyAuthenticated(res);
+    var prom = Promise.resolve('ok');
     switch (req.params.control) {
         case 'pause':
-            var prom = spotifyApi.pause();
+            prom = spotifyApi.pause();
             console.log('pause');
             break;
         case 'play':
-            var prom = spotifyApi.play();
+            prom = spotifyApi.play();
             console.log('play');
             break;
         case 'prev':
-            var prom = spotifyApi.skipToPrevious();
+            prom = spotifyApi.skipToPrevious();
             console.log('previous');
             break;
         case 'next':
-            var prom = spotifyApi.skipToNext();
+            if (queue.tracks.length > 0) {
+                playNextInQueue();
+            } else {
+                prom = spotifyApi.skipToNext();
+            }
             console.log('next');
             break;
         default:

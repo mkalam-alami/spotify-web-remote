@@ -65,11 +65,15 @@ app.get('/api/currentSong', async function (req, res, next) {
     assertSpotifyAuthenticated(res);
     try {
         const currentState = await spotifyApi.getMyCurrentPlayingTrack()
-        if (currentState.body.progress_ms === 0 && !currentState.body.is_playing) {
+        if (!currentState.body.progress_ms
+            && !currentState.body.is_playing
+            && currentState.body.item.uri === app.locals.currentPlayingUri) {
             const nextUri = queue.nextUri();
             if (nextUri) {
                 await spotifyApi.play({ uris: [nextUri] });
             }
+        } else if (currentState.body.is_playing) {
+            app.locals.currentPlayingUri = currentState.body.item.uri;
         }
 
         currentState.body.queue = queue.tracks;
